@@ -1,0 +1,37 @@
+#import os
+#uname_r=os.uname()[2]
+
+env = Environment(tools=['default', 'packaging'])
+
+env.Append( CCFLAGS='-Wall' )
+env.Append( CCFLAGS='-O3' )
+env.Append( CCFLAGS='--static' )
+#env.Append( LIBS='m' )
+#env.Append( LIBS='pthreads' )
+if ARGUMENTS.get('debug', 0):
+	env.Append( CCFLAGS = '-g' )
+
+
+#env.Install('/home/pi/', 'my_program')
+#env.Package(	NAME           = 'suk',
+#		VERSION        = '0.0.1',
+#		PACKAGEVERSION = 0,
+#		PACKAGETYPE    = 'zip',
+#		LICENSE        = 'gpl',
+#		SUMMARY        = 'balalalalal',
+#		DESCRIPTION    = 'this should be really really long',
+#		SOURCE_URL     = 'http://foo.org/foo-1.2.3.tar.gz'
+#	)
+#env.Append( CPPPATH=["/lib/modules/" + uname_r + "/build/include"] )
+#env.Append( CPPPATH=["/tmp/linux_source/linux/include/"] )
+
+
+t_sukd   = env.Program('sukd',
+	Split('trim.c sleep.c pipe.c libsuk.c sukd.c'),
+	srcdir='src',
+	parse_flags='-lm -lpthread'
+)
+
+Default(t_sukd)
+
+
