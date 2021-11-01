@@ -154,8 +154,8 @@ function refreshSessionList() {
     document.getElementById("gif-maker-error").style.display = "none";
     document.getElementById("ajax-refresh-spinner").style.display = "block";
     document.getElementById("refresh-btn").disabled = true;
-    document.getElementById("make-gif-btn").disabled = true;
-    document.getElementById("preview-session-btn").disabled = true;
+    document.getElementById("make-gif-btn").disabled = false;
+    document.getElementById("preview-session-btn").disabled = false;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4) {
