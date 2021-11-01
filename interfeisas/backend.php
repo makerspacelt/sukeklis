@@ -70,9 +70,9 @@ function getDirContents($dir, $filesOnly = false, $jpgOnly = false, $flags = SCA
 }
 //=========================================
 function rotateAndDoPhoto() {
-    if (isset($_GET['turnDegrees']) && is_numeric($_GET['turnDegrees']) && isset($_GET['folder'])) {
+    if (isset($_GET['turnDegrees']) && is_numeric($_GET['turnDegrees']) && isset($_GET['folder']) && isset($_GET['ext'])) {
         $folder = base64_decode($_GET['folder']);
-        $filename = sprintf('%s.jpg', time());
+        $filename = sprintf('%s.%s', time(), $_GET['ext']);
         exec(sprintf('cd "%s" && %s "%s"', $folder, GPHOTO_CMD, $filename));
         $turnDegrees = intval($_GET['turnDegrees']);
         if ($turnDegrees <= 0) {
@@ -162,18 +162,23 @@ function showSessionPreview() {
                     $imgHtmlArr[] = sprintf('<a href="%1$s" data-fancybox="gallery"><img src="%1$s" style="width: 30em" class="img-thumbnail m-1"></a>',$sessionDir.'/'.$img);
                 }
             }
-            $images = implode($imgHtmlArr);
+            if (count($imgHtmlArr) > 0) {
+                $images = implode($imgHtmlArr);
+            } else {
+                $infoText = 'No JPG files found in this session';
+                $images = '';
+            }
         } else {
             $infoText = 'No JPG files found in this session';
             $images = '';
         }
     } else {
         $infoText = 'No session was selected';
-		$images = '';
+        $images = '';
     }
-	$template = file_get_contents(PREVIEW_TEMPLATE);
-	$template = sprintf($template, $infoText, $images);
-	echo $template;
+    $template = file_get_contents(PREVIEW_TEMPLATE);
+    $template = sprintf($template, $infoText, $images);
+    echo $template;
 }
 //=========================================
 function getSessionFileList() {

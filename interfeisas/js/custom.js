@@ -30,6 +30,7 @@ function prepSession() {
     if ((360 % degs) == 0) {
         document.getElementById("start-btn").disabled = true;
         document.getElementById("stop-btn").disabled = false;
+        document.getElementById("file-format-ext").disabled = true;
         document.getElementById("session-progress-block").style.display = "block";
         document.getElementById("session-error").style.display = "none";
         document.getElementById("session-success").style.display = "none";
@@ -56,7 +57,7 @@ function prepSession() {
     }
 }
 
-function doRequest(pBar, pLabel, numOfPics, turnDegrees) {
+function doRequest(pBar, pLabel, numOfPics, turnDegrees, extension) {
     this.requestCounter++;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -66,7 +67,7 @@ function doRequest(pBar, pLabel, numOfPics, turnDegrees) {
             pBar.setAttribute("aria-valuenow", perc);
             if (!stopRequests && requestCounter < numOfPics) {
                 // hopefully we don't hit the recursion limit here lol
-                doRequest(pBar, pLabel, numOfPics, turnDegrees);
+                doRequest(pBar, pLabel, numOfPics, turnDegrees, extension);
                 pLabel.innerHTML = "Doing photo "+requestCounter+" out of "+numOfPics+":";
             } else {
                 if (stopRequests) {
@@ -81,10 +82,11 @@ function doRequest(pBar, pLabel, numOfPics, turnDegrees) {
                 document.getElementById("start-btn").disabled = false;
                 document.getElementById("stop-btn").disabled = true;
                 document.getElementById("get-files-btn").disabled = false;
+                document.getElementById("file-format-ext").disabled = false;
             }
         }
     };
-    xhttp.open("GET", "backend.php?f=rotateAndDoPhoto&turnDegrees="+turnDegrees+"&folder="+btoa(folder), true);
+    xhttp.open("GET", "backend.php?f=rotateAndDoPhoto&turnDegrees="+turnDegrees+"&folder="+btoa(folder)+"&ext="+extension, true);
     xhttp.send();
 }
 
@@ -93,15 +95,17 @@ function startSession() {
     var pBar = document.getElementById("session-progress-bar");
     var pLabel = document.getElementById("session-progress-label");
     var turnDegrees = document.getElementById("degree-slider").value;
+    var extension = document.getElementById("file-format-ext").value.trim();
     pLabel.innerHTML = "Doing photo 1 out of "+numOfPics+":";
     this.requestCounter = 0;
-    this.doRequest(pBar, pLabel, numOfPics, turnDegrees);
+    this.doRequest(pBar, pLabel, numOfPics, turnDegrees, extension);
 }
 
 function stopSession() {
     document.getElementById("start-btn").disabled = false;
     document.getElementById("stop-btn").disabled = true;
     document.getElementById("get-files-btn").disabled = false;
+    document.getElementById("file-format-ext").disabled = false
     this.stopRequests = true;
 }
 
