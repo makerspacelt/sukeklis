@@ -349,6 +349,7 @@ function prepGifMaker() {
                     warningDiv.innerHTML = "This session is empty";
                     warningDiv.style.display = "block";
                     document.getElementById("gif-progress-block").style.display = "none";
+                    document.getElementById("make-gif-btn").disabled = false;
                 } else {
                     var infoArr = JSON.parse(this.responseText);
                     makeGif(infoArr);
@@ -357,8 +358,9 @@ function prepGifMaker() {
                 var errorDiv = document.getElementById("gif-maker-error");
                 errorDiv.innerHTML = "Error sending request to server, check connection";
                 errorDiv.style.display = "block";
+                document.getElementById("gif-progress-block").style.display = "none";
+                document.getElementById("make-gif-btn").disabled = false;
             }
-            document.getElementById("make-gif-btn").disabled = false;
         }
     };
     xhttp.open("GET", "backend.php?f=getSessionFileList&session="+btoa(selected), true);
