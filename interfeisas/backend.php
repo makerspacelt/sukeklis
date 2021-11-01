@@ -153,7 +153,6 @@ function showSessionPreview() {
     if (isset($_GET['session']) && (trim($_GET['session'] != ''))) {
         $session = base64_decode($_GET['session']);
         $sessionDir = PHOTO_ROOT.'/'.$session;
-        $template = file_get_contents(PREVIEW_TEMPLATE);
         $imgArr = getDirContents($sessionDir, true, true);
         if (count($imgArr) > 0) {
             $infoText = sprintf('Previewing session "%1$s", found %2$d images', $session, count($imgArr));
@@ -168,11 +167,13 @@ function showSessionPreview() {
             $infoText = 'No JPG files found in this session';
             $images = '';
         }
-        $template = sprintf($template, $infoText, $images);
-        echo $template;
     } else {
-        echo 'false';
+        $infoText = 'No session was selected';
+		$images = '';
     }
+	$template = file_get_contents(PREVIEW_TEMPLATE);
+	$template = sprintf($template, $infoText, $images);
+	echo $template;
 }
 //=========================================
 function getSessionFileList() {
