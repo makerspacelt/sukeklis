@@ -269,20 +269,20 @@ function showSessionPreview() {
     window.open("backend.php?f=showSessionPreview&session="+btoa(selected), "_blank");
 }
 
-function waitForImagesLoaded(imageURLs, callback){
+function waitForImagesLoaded(imageURLs, callback) {
     var imageElements = [];
     var remaining = imageURLs.length;
-    var onEachImageLoad = function(){
+    var onEachImageLoad = function() {
         if (--remaining === 0 && callback) {
             callback(imageElements);
         }
     };
 
-   for (var i = 0, len = imageURLs.length; i < len; i++){
-      var img = new Image();
-      img.onload = onEachImageLoad;
-      img.src = imageURLs[i];
-      imageElements.push(img);
+   for (var i = 0, len = imageURLs.length; i < len; i++) {
+        var img = new Image();
+        img.onload = onEachImageLoad;
+        img.src = imageURLs[i];
+        imageElements.push(img);
    }
 }
 
@@ -313,6 +313,8 @@ function makeGif(infoArr) {
         gif.render();
     });
 
+    document.getElementById("gif-loading-spinner").style.display = "none";
+    
     gif.on('finished', function(blob) {
         var gif = URL.createObjectURL(blob);
         document.getElementById("make-gif-btn").disabled = false;
@@ -336,6 +338,7 @@ function prepGifMaker() {
     document.getElementById("download-gif-block").style.display = "none";
     document.getElementById("gif-maker-error").style.display = "none";
     document.getElementById("gif-maker-warning").style.display = "none";
+    document.getElementById("gif-loading-spinner").style.display = "block";
     document.getElementById("make-gif-btn").disabled = true;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
