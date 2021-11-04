@@ -286,14 +286,15 @@ function waitForImagesLoaded(imageURLs, callback) {
    }
 }
 
-function makeGif(infoArr) {
+function makeGif(infoArr, swapDimens) {
+    console.log(swapDimens);
     var gifQuality = document.getElementById("gif-quality-slider").value*10;
     var gifSize = document.getElementById("gif-size-slider").value;
     
-    var d = Math.round((gifSize/100)*infoArr['dimensions'][0]);
-    var newWidth = infoArr['dimensions'][0]-d;
-    d = Math.round((gifSize/100)*infoArr['dimensions'][1]);
-    var newHeight = infoArr['dimensions'][1]-d;
+    var d = Math.round((gifSize/100)*infoArr['dimensions'][(swapDimens ? 1 : 0)]);
+    var newWidth = infoArr['dimensions'][(swapDimens ? 1 : 0)]-d;
+    d = Math.round((gifSize/100)*infoArr['dimensions'][(swapDimens ? 0 : 1)]);
+    var newHeight = infoArr['dimensions'][(swapDimens ? 0 : 1)]-d;
     
     var gif = new GIF({
         workers: 2,
@@ -318,6 +319,7 @@ function makeGif(infoArr) {
     gif.on('finished', function(blob) {
         var gif = URL.createObjectURL(blob);
         document.getElementById("make-gif-btn").disabled = false;
+        document.getElementById("swap-dimen").disabled = false;
         document.getElementById("preview-gif-link").href = gif;
         document.getElementById("preview-gif").src = gif;
         document.getElementById("download-gif-btn").href = gif;
@@ -334,12 +336,14 @@ function makeGif(infoArr) {
 
 function prepGifMaker() {
     var selected = document.getElementById("session-select").value;
+    var swapDimens = document.getElementById("swap-dimen").checked;
     document.getElementById("gif-progress-block").style.display = "block";
     document.getElementById("download-gif-block").style.display = "none";
     document.getElementById("gif-maker-error").style.display = "none";
     document.getElementById("gif-maker-warning").style.display = "none";
     document.getElementById("gif-loading-spinner").style.display = "block";
     document.getElementById("make-gif-btn").disabled = true;
+    document.getElementById("swap-dimen").disabled = true;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4) {
@@ -350,9 +354,10 @@ function prepGifMaker() {
                     warningDiv.style.display = "block";
                     document.getElementById("gif-progress-block").style.display = "none";
                     document.getElementById("make-gif-btn").disabled = false;
+                    document.getElementById("swap-dimen").disabled = false;
                 } else {
                     var infoArr = JSON.parse(this.responseText);
-                    makeGif(infoArr);
+                    makeGif(infoArr, swapDimens);
                 }
             } else {
                 var errorDiv = document.getElementById("gif-maker-error");
@@ -360,6 +365,7 @@ function prepGifMaker() {
                 errorDiv.style.display = "block";
                 document.getElementById("gif-progress-block").style.display = "none";
                 document.getElementById("make-gif-btn").disabled = false;
+                document.getElementById("swap-dimen").disabled = false;
             }
         }
     };
