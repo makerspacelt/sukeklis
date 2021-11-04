@@ -118,8 +118,8 @@ function showPreview() {
         if (this.readyState == 4) {
             if (this.status == 200) {
                 document.getElementById("preview-img").style.display = "block";
-                document.getElementById("preview-img-link").href = atob(this.responseText);
-                document.getElementById("preview-img").src = atob(this.responseText);
+                document.getElementById("preview-img-link").href = "data:image/jpg;base64,"+this.responseText;
+                document.getElementById("preview-img").src = "data:image/jpg;base64,"+this.responseText;
             } else {
                 var errorDiv = document.getElementById("preview-error");
                 errorDiv.innerHTML = "Error sending request to server, check connection";
